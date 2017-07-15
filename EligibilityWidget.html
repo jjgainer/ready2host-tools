@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Check Short-Term Rental Eligibility</title>
+    <style>
+        form.appnitro {
+            margin: 20px 20px 0;
+            padding: 0 0 20px;
+        }
+        label.description {
+            border: none;
+            color: #222;
+            display: block;
+            font-size: 95%;
+            font-weight: 700;
+            line-height: 150%;
+            padding: 0 0 1px;
+        }
+        input.text {
+            background: #fff url(../../../images/shadow.gif) repeat-x top;
+            border-bottom: 1px solid #ddd;
+            border-left: 1px solid #c3c3c3;
+            border-right: 1px solid #c3c3c3;
+            border-top: 1px solid #7c7c7c;
+            color: #333;
+            font-size: 100%;
+            margin: 0;
+            padding: 2px 0;
+        }
+        input.small {
+            width: 25%;
+        }
+        input.medium {
+            width: 50%;
+        }
+        input.button_text {
+            overflow: visible;
+            padding: 0 7px;
+            width: auto;
+        }
+        h1 {
+            background-color: #dedede;
+            margin: 0;
+            min-height: 0;
+            padding: 0;
+            text-decoration: none;
+            text-indent: -8000px;
+        }
+        h1 a {
+            display: block;
+            height: 100%;
+            min-height: 40px;
+            overflow: hidden;
+        }
+        form ul {
+            font-size: 100%;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+        form li {
+            display: block;
+            margin: 0;
+            padding: 4px 5px 2px 9px;
+            position: relative;
+        }
+        .buttons input {
+            font-size: 120%;
+            margin-right: 5px;
+        }
+        .appnitro {
+            font-family: Lucida Grande, Tahoma, Arial, Verdana, sans-serif;
+            font-size: small;
+        }
+        .form_description {
+            border-bottom: 1px dotted #ccc;
+            clear: both;
+            display: inline-block;
+            margin: 0 0 1em;
+        }
+        .form_description[class] {
+            display: block;
+        }
+        .form_description h2 {
+            clear: left;
+            font-size: 160%;
+            font-weight: 400;
+            margin: 0 0 3px;
+        }
+        .form_description p {
+            font-size: 95%;
+            line-height: 130%;
+            margin: 0 0 12px;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        function checkEligibility() {
+            var loading_image = document.createElement('img');
+            loading_image.setAttribute('src', 'https://static.wixstatic.com/media/65c37a_dd1dce2c4903435b9fa9994abe8bd05b~mv2.gif?dn=ajax-loader-small.gif');
+            loading_image.setAttribute('style', 'display: none;');
+            loading_image.setAttribute('alt', 'loading');
+            loading_image.setAttribute('id', 'loading_image');
+            var submit_button = document.getElementById('saveForm');
+            var eligibility_check = document.getElementById('eligibility_check');
+            var button_list = document.getElementById('li_3');
+            if (!document.getElementById('loading_image')) { //is the image on the form yet?
+                // add it just before the submit button
+                button_list.appendChild(loading_image);
+            }
+            loading_image.style.display=''; // show the animated image    
+            submit_button.setAttribute('style', 'display: none');
+            return true; // allow regular form submission
+        }
+    </script>
+</head>
+<body id="main_body">
+    <div id="form_container">
+        <h1><a>Check Short-Term Rental Eligibility</a></h1>
+        <form id="eligibility_check" class="appnitro" method="post" action="https://ready2host-jjgainer.c9users.io:8080/miamibeach/property">
+            <div id='description' class="form_description">
+                <h2>Check Short-Term Rental Eligibility</h2>
+                <p>Use this form to perform a preliminary check to determine whether a property in Miami-Dade county is potentially eligible for legal short-term rental.</p>
+            </div>
+            <ul id='form_list'>
+                <li id="li_1">
+                    <label class="description" for="element_1">Street Address (e.g. 6515 Collins Ave) </label>
+                    <div>
+                        <input id="element_1" name="streetAddress" class="element text medium" type="text" maxlength="255" value="" />
+                    </div>
+                </li>
+                <li id="li_2">
+                    <label class="description" for="element_2">Apartment (e.g. 101) </label>
+                    <div>
+                        <input id="element_2" name="apartment" class="element text medium" type="text" maxlength="255" value="" />
+                    </div>
+                </li>
+                <li id='li_3' class="buttons">
+                    <input type="hidden" name="form_id" value="40625" />
+                    <input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" onclick='checkEligibility()'/>
+                </li>
+            </ul>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "Ready2Host_tools",
+  "version": "0.0.0",
+  "description": "Tools used by Ready2Host.",
+  "main": "server.js",
+  "repository": "",
+  "author": "Jerome Gainer <jjgainer@gmail.com>",
+  "dependencies": {
+    "express": "latest",
+    "request": "latest",
+    "cheerio": "latest",
+    "entities": "latest",
+    "lodash.assignin": "latest",
+    "casper": "latest",
+    "body-parser": "latest",
+    "spooky": "latest"
+  },
+  "devDependencies": {
+    "zombie": "^5.0.7"
+  }
+}
