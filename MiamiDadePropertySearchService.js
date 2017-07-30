@@ -219,7 +219,11 @@ app.get('/miamibeach/property', function(req, res) {
     
 })
 
-
-app.listen(process.env.PORT);
-console.log('Magic happens on port ' + process.env.PORT);
+// Default port to standard Express port, override if in Cloud9 environment
+var port=3000;
+if (typeof process.env.PORT !== "undefined") {
+    port = process.env.PORT;
+}
+app.listen(port);
+console.log('Service up and listening on port ' + port);
 exports = module.exports = app;
