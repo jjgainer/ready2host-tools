@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 var eligibleString = 'Property is likely eligible for short-term rental due to the following reasons:';
 var ineligibleString = 'Property is likely NOT eligible for short-term rental due to the following reasons:';
-var errorString = 'Unable to determine eligibility for property';
+var errorString = 'Unable to determine eligibility for property:';
 
 function generateResponseHtml(eligibility, propertyData, error, originalAddress) {
 
@@ -36,13 +36,13 @@ function generateResponseHtml(eligibility, propertyData, error, originalAddress)
         propertyData = {
             property: {
                 propertyAddress: {
-                    addressLine1: originalAddress.streetAddress + ' UNIT: ' + originalAddress.apartment,
+                    addressLine1: originalAddress.streetAddress + 'UNIT: ' + originalAddress.apartment,
                     addressLine2: ''
                 }
             }
         }
         eligibility = {
-            reasons: []
+            reasons: [[]]
         }
     } else if (eligibility.eligible) {
         eligibilityString = eligibleString;
@@ -130,12 +130,58 @@ function determineEligibility(propertyData) {
 
 app.post('/miamibeach/property', function(req, res) {
     
-    //var streetAddress = req.query.streetAddress;
-    //var apartment = req.query.apartment;
+    console.log("in POST for /miamibeach/property");
+    
     var streetAddress = req.body.streetAddress;
     var apartment = req.body.apartment;
+    var includeImage = req.body.includeImage;
     
     var includeImage = req.query.includeImage;
+    if (undefined === includeImage) {
+        includeImage = 'false';
+    }
+    
+    getProperty(streetAddress, apartment, includeImage, function(error, property) {
+        
+        console.log("in callback for getProperty");
+        var propertyData;
+        
+        if (!error) {
+            
+            getHoaRules(streetAddress, apartment, function(error, rules) {
+                
+                console.log("in callback for getHoaRules");
+                
+                if (!error) {
+                    propertyData = {property, rules};
+                    console.log(JSON.stringify(propertyData));
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    var eligibility = determineEligibility(propertyData);
+                    res.end(generateResponseHtml(eligibility, propertyData, false, null));
+                    
+                } else {
+                    console.log(JSON.stringify(error));
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    res.end(generateResponseHtml(null, null, true, {streetAddress, apartment}));
+                }
+            });
+        } else {
+            console.log(JSON.stringify(error));
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end(generateResponseHtml(null, null, true, {streetAddress, apartment}));
+        }
+    });
+    
+})
+
+app.get('/miamibeach/property', function(req, res) {
+    
+    console.log("in GET for /miamibeach/property");
+    
+    var streetAddress = req.query.streetAddress;
+    var apartment = req.query.apartment;
+    var includeImage = req.query.includeImage;
+    
     if (undefined === includeImage) {
         includeImage = 'false';
     }
