@@ -126,50 +126,6 @@ function determineEligibility(propertyData) {
     console.log('eligibility=' + JSON.stringify(eligibility));
     return eligibility;
 } 
-
-function callGetProperty (streetAddress, apartment, includeImage) {
-    return new Promise(function(resolve, reject) {
-
-        getProperty(streetAddress, apartment, includeImage, function(error, property) {
-            
-            console.log("in callback for getProperty");
-            
-            if (!error) {
-                
-                console.log(JSON.stringify(property));
-                resolve(property);
-                
-            } else {
-                
-                console.log(JSON.stringify(error));
-                reject(error);
-            }
-        });
-    });  
-}
-
-function callGetHoa (streetAddress, apartment) {
-        
-    return new Promise(function(resolve, reject) {
-        
-        getHoaRules(streetAddress, apartment, function(error, rules) {
-                    
-            console.log("in callback for getHoaRules");
-            
-            if (!error) {
-                
-                console.log(JSON.stringify(rules));
-                resolve(rules);
-                
-            } else {
-                
-                console.log(JSON.stringify(error));
-                reject(error);
-                
-            }
-        });
-    }); 
-}
  
 
 app.post('/miamibeach/property', function(req, res) {
@@ -185,24 +141,37 @@ app.post('/miamibeach/property', function(req, res) {
         includeImage = 'false';
     }
     
-    var getPropertyPromise = callGetProperty(streetAddress, apartment, includeImage);  
-    
-    var getHoaPromise = callGetHoa(streetAddress, apartment);
-    
-    var callServices = Promise.all([getPropertyPromise, getHoaPromise]).then( values => {
+    getProperty(streetAddress, apartment, includeImage, function(error, property) {
         
-        var propertyData = {
-            property: values[0],
-            rules: values[1]
-        };
-        var eligibility = determineEligibility(propertyData);
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(generateResponseHtml(eligibility, propertyData, false, null));
-    }, error => {
-        console.log("Unsuccessful call to promise, error=" + error);
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(generateResponseHtml(null, null, true, {streetAddress, apartment}));
+        console.log("in callback for getProperty");
+        var propertyData;
+        
+        if (!error) {
+            
+            getHoaRules(streetAddress, apartment, function(error, rules) {
+                
+                console.log("in callback for getHoaRules");
+                
+                if (!error) {
+                    propertyData = {property, rules};
+                    console.log(JSON.stringify(propertyData));
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    var eligibility = determineEligibility(propertyData);
+                    res.end(generateResponseHtml(eligibility, propertyData, false, null));
+                    
+                } else {
+                    console.log(JSON.stringify(error));
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    res.end(generateResponseHtml(null, null, true, {streetAddress, apartment}));
+                }
+            });
+        } else {
+            console.log(JSON.stringify(error));
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end(generateResponseHtml(null, null, true, {streetAddress, apartment}));
+        }
     });
+    
 })
 
 app.get('/miamibeach/property', function(req, res) {
@@ -217,24 +186,37 @@ app.get('/miamibeach/property', function(req, res) {
         includeImage = 'false';
     }
     
-    var getPropertyPromise = callGetProperty(streetAddress, apartment, includeImage);  
-    
-    var getHoaPromise = callGetHoa(streetAddress, apartment);
-    
-    var callServices = Promise.all([getPropertyPromise, getHoaPromise]).then( values => {
+    getProperty(streetAddress, apartment, includeImage, function(error, property) {
         
-        var propertyData = {
-            property: values[0],
-            rules: values[1]
-        };
-        var eligibility = determineEligibility(propertyData);
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(generateResponseHtml(eligibility, propertyData, false, null));
-    }, error => {
-        console.log("Unsuccessful call to promise, error=" + error);
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(generateResponseHtml(null, null, true, {streetAddress, apartment}));
+        console.log("in callback for getProperty");
+        var propertyData;
+        
+        if (!error) {
+            
+            getHoaRules(streetAddress, apartment, function(error, rules) {
+                
+                console.log("in callback for getHoaRules");
+                
+                if (!error) {
+                    propertyData = {property, rules};
+                    console.log(JSON.stringify(propertyData));
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    var eligibility = determineEligibility(propertyData);
+                    res.end(generateResponseHtml(eligibility, propertyData, false, null));
+                    
+                } else {
+                    console.log(JSON.stringify(error));
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    res.end(generateResponseHtml(null, null, true, {streetAddress, apartment}));
+                }
+            });
+        } else {
+            console.log(JSON.stringify(error));
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end(generateResponseHtml(null, null, true, {streetAddress, apartment}));
+        }
     });
+    
 })
 
 // Default port to standard Express port, override if in Cloud9 environment

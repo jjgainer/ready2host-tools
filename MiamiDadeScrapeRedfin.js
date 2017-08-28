@@ -26,7 +26,8 @@ var rules = function getHoaRules (address, suite, callback) {
     
     var spooky = new Spooky({
             child: {
-                transport: 'http'
+                transport: 'http',
+                port: 8082
             },
             casper: {
                 logLevel: 'debug',

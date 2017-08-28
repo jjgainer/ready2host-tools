@@ -17,7 +17,8 @@ var property = function getPropertyData (address, suite, includeImage, callback)
     
     var spooky = new Spooky({
             child: {
-                transport: 'http'
+                transport: 'http',
+                port: 8081
             },
             casper: {
                 logLevel: 'debug',
